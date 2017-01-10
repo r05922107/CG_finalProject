@@ -67,6 +67,7 @@ public class AIScript : MonoBehaviour {
 
 		// hurt target
 		// simple test
+		target.GetComponent<mainChaAct>().hurt(enemyObject, 10f, 5f);
 		//target.transform.Translate (0, 0, -5);
 
 		// reset CD
