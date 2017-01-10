@@ -3,7 +3,8 @@ using System.Collections;
 
 public class mainChaAct : MonoBehaviour {
 
-    public GameObject forwardPoint;
+	public GameObject myObject;
+	public GameObject forwardPoint;
     public GameObject hitBox;
     public Rigidbody rigBody;
     public Animator anim;
@@ -17,6 +18,8 @@ public class mainChaAct : MonoBehaviour {
     private float inputV;
     private float attackCD;
     //private bool attack;
+
+	GameObject[] targetTransform;
 
     Vector3 fp;
     float way = 75;
@@ -56,8 +59,8 @@ public class mainChaAct : MonoBehaviour {
         }
 
         if (Input.GetButtonDown("Fire1")) {
-            anim.Play("Attack1");
-            hitBox.SetActive(true);
+            //hitBox.SetActive(true);
+			attack ();
             counter = 30;
         }
 
@@ -81,10 +84,26 @@ public class mainChaAct : MonoBehaviour {
         //transform.Translate(mSpeed * h, 0, 0);//
 
     }
+	public void attack(){
+		// animation
+		anim.Play("Attack1");
 
+		// get enemy
+		targetTransform = GameObject.FindGameObjectsWithTag("enemy");
+		foreach(GameObject enemy in targetTransform){ // each enemy
+			Vector3 direction = enemy.transform.position - myObject.transform.position;
+			float distance = direction.magnitude;
+			float angle = angle_360(myObject.transform.forward,direction);
+
+			if(distance < 10 && (angle < 30 || angle > 330)){
+				enemy.GetComponent<AIScript>().hurt(myObject, 10f, 5f);
+			}
+		}
+	}
 
     public void hurt(GameObject attacker, float damage, float knockback)
     {
+		anim.Play("GetHit");
         // decrease HP
         HP -= damage;
 
@@ -99,4 +118,12 @@ public class mainChaAct : MonoBehaviour {
         }
     }
 
+
+	private float angle_360(Vector3 from_, Vector3 to_){  
+		Vector3 v3 = Vector3.Cross(from_,to_);  
+		if(v3.y > 0)  
+			return Vector3.Angle(from_,to_);  
+		else  
+			return 360-Vector3.Angle(from_,to_);  
+	}
 }

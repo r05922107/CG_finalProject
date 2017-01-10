@@ -12,6 +12,7 @@ public class AIScript : MonoBehaviour {
 	public int enemySpeed = 1;
 	public float enemyAttackCD = 3;
 	public int enemyRotateSpeed = 1;
+	public int attackRange = 12;
 
 	// variables
 	private float attackCD;
@@ -45,7 +46,7 @@ public class AIScript : MonoBehaviour {
 			enemyObject.transform.Rotate (0, -1 * enemyRotateSpeed, 0);
 		} else if (180 >= angle && angle > 10) { // right rotate
 			enemyObject.transform.Rotate (0, enemyRotateSpeed, 0);
-		} else if (distance < 8) { // attack
+		} else if (distance < attackRange) { // attack
 			if (attackCD > 0) { // return if CD-ing
 				return;
 			} else {
@@ -84,7 +85,7 @@ public class AIScript : MonoBehaviour {
 		enemyObject.transform.position = enemyObject.transform.position + knockback * attackDirection;
 
 		// check dead
-		if (enemyHP <= 0) { // if dead destroyed itself
+		if (enemyHP <= 0 || enemyObject.transform.position.y < -20 ) { // if dead destroyed itself
 			Destroy (enemyObject);
 		}
 	}
