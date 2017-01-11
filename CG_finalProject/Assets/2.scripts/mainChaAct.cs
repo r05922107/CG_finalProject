@@ -114,7 +114,7 @@ public class mainChaAct : MonoBehaviour {
         // check dead
         if (HP <= 0)
         { // if dead destroyed itself
-            Destroy(this);
+			Destroy(myObject);
         }
     }
 
