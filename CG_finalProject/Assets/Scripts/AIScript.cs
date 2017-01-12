@@ -4,95 +4,122 @@ using System.Collections;
 public class AIScript : MonoBehaviour {
 	
 	// Objects
-	public GameObject playerObject;
-	public GameObject enemyObject;
+	public GameObject trackObject;
     public Animator anim;
+
     // properties
-    public float enemyHP = 100f;
-	public int enemySpeed = 1;
-	public float enemyAttackCD = 3;
-	public int enemyRotateSpeed = 1;
-	public int attackRange = 12;
+    public float hp = 100f;
+	public int speed = 1;
+	public float attackMaxCD = 3;
+	public int attackDistance = 8;
+	public int trackDistance = 50000;
 
 	// variables
 	private float attackCD;
 
 
-	// Use this for initialization
+	// initial
 	void Start () {
 		attackCD = 0;
         anim = GetComponent<Animator>();
     }
 	
-	// Update is called once per frame
+	// update
 	void Update () {
 		// update attackCD
 		attackCD = attackCD - Time.smoothDeltaTime <= 0 ? 0 : attackCD - Time.smoothDeltaTime;
 
-		// check player exist
-		if (playerObject == null) {
-			return;
-		}
+		// update motions
+		motionUpdate ();
 
-		// compute forward and direction vector to player 
-		Vector3 forward = enemyObject.transform.forward;
-		Vector3 direction = (playerObject.transform.position - enemyObject.transform.position);
+	}
+		
+	// motion 
+	private void motionUpdate(){
+		
 
-		// compute angle and distance to player
-		float distance = direction.sqrMagnitude;
-		float angle = angle_360(forward,direction);
 
-		// track
-		if (350 > angle && angle > 180) { // left rotate 
-			enemyObject.transform.Rotate (0, -1 * enemyRotateSpeed, 0);
-		} else if (180 >= angle && angle > 10) { // right rotate
-			enemyObject.transform.Rotate (0, enemyRotateSpeed, 0);
-		} else if (distance < attackRange) { // attack
-			if (attackCD > 0) { // return if CD-ing
-				return;
-			} else {
-				attack (playerObject, 0);
+		// track player
+		if (trackObject != null) {
+			// Rotate forward to Target  
+			Vector3 forward = gameObject.transform.forward;
+			forward.y = 0;
+			forward = forward.normalized;
+			Vector3 targetDirection = (trackObject.transform.position - gameObject.transform.position);
+			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDirection), Time.deltaTime * 5 );
+
+			// Attack or Move
+			if (targetDirection.magnitude < attackDistance) { // attack target
+				if (attackCD == 0) { // attack
+					attack (trackObject, 0);
+				} else {
+					// CD-ing
+					// idle
+				}
+			}else if (targetDirection.magnitude < trackDistance &&  (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack1"))) { // move to player
+				gameObject.transform.Translate (0, 0, speed * Time.smoothDeltaTime);
 			}
-		} else if (distance < 50000) { // move to player
-			enemyObject.transform.Translate (0, 0, enemySpeed * Time.smoothDeltaTime);
+		} else {
+			// no target
+			// idle
 		}
-	
+
+
 	}
 
 
-	private void attack(GameObject target, int attackType){
-		//hurt (playerObject, 10, 5);
-		print("Attack !\n");
 
+
+
+
+
+
+
+
+
+	// attack target by hurt function in target
+	private void attack(GameObject target, int attackType){
         // attack animation
         anim.Play("Attack1");
 		// do some animation
 
 		// hurt target
-		// simple test
-		target.GetComponent<mainChaAct>().hurt(enemyObject, 10f, 5f);
-		//target.transform.Translate (0, 0, -5);
+		target.GetComponent<mainChaAct>().hurt(gameObject, 10f, 5f);
 
 		// reset CD
-		attackCD = enemyAttackCD;
+		attackCD = attackMaxCD;
 	}
 
 
+
+
+	// be hurt
 	public void hurt(GameObject attacker, float damage, float knockback){
+
+
 		// decrease HP
-		enemyHP -= damage;
+		hp -= damage;
 
 		// be knockback 
 		Vector3 attackDirection = attacker.transform.forward.normalized;
-		enemyObject.transform.position = enemyObject.transform.position + knockback * attackDirection;
+		gameObject.transform.position = gameObject.transform.position + knockback * attackDirection;
 
 		// check dead
-		if (enemyHP <= 0 || enemyObject.transform.position.y < -20 ) { // if dead destroyed itself
-			Destroy (enemyObject);
+		if (hp <= 0 || gameObject.transform.position.y < -20 ) {
+			Destroy (transform.root.gameObject);
 		}
 	}
 
 
+
+
+
+
+
+
+
+
+	// math function
 	private float angle_360(Vector3 from_, Vector3 to_){  
 		Vector3 v3 = Vector3.Cross(from_,to_);  
 		if(v3.y > 0)  
@@ -100,5 +127,4 @@ public class AIScript : MonoBehaviour {
 		else  
 			return 360-Vector3.Angle(from_,to_);  
 	}
-		
 }
