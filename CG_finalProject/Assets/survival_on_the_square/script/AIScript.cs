@@ -5,7 +5,8 @@ public class AIScript : MonoBehaviour {
 	
 	// Objects
 	public GameObject trackObject;
-    public Animator anim;
+    private Animator anim;
+	private Rigidbody rbody;
 
     // properties
     public float hp = 100f;
@@ -23,6 +24,7 @@ public class AIScript : MonoBehaviour {
 	void Start () {
 		attackCD = 0;
         anim = GetComponent<Animator>();
+		rbody = GetComponent<Rigidbody>();
     }
 	
 	// update
@@ -37,9 +39,6 @@ public class AIScript : MonoBehaviour {
 		
 	// motion 
 	private void motionUpdate(){
-		
-
-
 		// track player
 		if (trackObject != null) {
 			// Rotate forward to Target  
@@ -64,6 +63,8 @@ public class AIScript : MonoBehaviour {
 			// no target
 			// idle
 		}
+
+
 	}
 
 
@@ -101,7 +102,11 @@ public class AIScript : MonoBehaviour {
 
 		// be knockback 
 		Vector3 attackDirection = attacker.transform.forward.normalized;
-		gameObject.transform.position = gameObject.transform.position + knockback * attackDirection;
+		attackDirection.y = 0;
+		attackDirection = attackDirection.normalized;
+
+		rbody.velocity =  attackDirection * knockback ;
+		//gameObject.transform.position = gameObject.transform.position + knockback * attackDirection;
 
 		// check dead
 		if (hp <= 0 || gameObject.transform.position.y < -20 ) {
