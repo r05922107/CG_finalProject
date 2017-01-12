@@ -5,7 +5,7 @@ public class mainChaAct : MonoBehaviour {
 
 	public GameObject myObject;
 	public GameObject forwardPoint;
-    public GameObject hitBox;
+    public GameObject effect;//特效
     public Rigidbody rigBody;
     public Animator anim;
     public float mSpeed = 0.1F;
@@ -14,7 +14,6 @@ public class mainChaAct : MonoBehaviour {
     public float mcAttackCD = 5;
     public float HP = 100f;
 
-    private int counter = 0;
     private float inputH;
     private float inputV;
     Vector3 inputVec;
@@ -24,9 +23,6 @@ public class mainChaAct : MonoBehaviour {
 
 	GameObject[] targetTransform;
 
-    Vector3 fp;
-    float way = 75;
-    float c = 1;
     
 
     // Use this for initialization
@@ -44,7 +40,6 @@ public class mainChaAct : MonoBehaviour {
             //hitBox.SetActive(true);
             print("hit!");
             attack();
-            counter = 30;
         }
 
         inputH = Input.GetAxisRaw("Horizontal");//獲取水平軸向按鍵
@@ -56,8 +51,9 @@ public class mainChaAct : MonoBehaviour {
 
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack1")) {
             UpdateMovement();
-        } 
-        
+        }
+
+        fallDetect();
 
         /*
         fp = forwardPoint.transform.position;
@@ -109,7 +105,8 @@ public class mainChaAct : MonoBehaviour {
 
 			if(distance < 10 && (angle < 30 || angle > 330)){
 				enemy.GetComponent<AIScript>().hurt(myObject, 10f, 5f);
-			}
+                Instantiate(effect, transform.position + new Vector3(0, 1.5f, 0) + direction*0.5f, transform.rotation);
+            }
 		}
 	}
 
@@ -127,6 +124,12 @@ public class mainChaAct : MonoBehaviour {
         if (HP <= 0)
         { // if dead destroyed itself
 			Destroy(myObject);
+        }
+    }
+
+    private void fallDetect() {
+        if (transform.position.y < -20f) {
+            Destroy(myObject);
         }
     }
 
