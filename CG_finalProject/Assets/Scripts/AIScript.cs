@@ -9,10 +9,11 @@ public class AIScript : MonoBehaviour {
 
     // properties
     public float hp = 100f;
-	public int speed = 1;
-	public float attackMaxCD = 3;
-	public int attackDistance = 6;
-	public int trackDistance = 50000;
+	public float speed = 1f;
+	public float trackDistance = 50000f;
+	public float attackMaxCD = 3f;
+	public float attackDistance = 6f;
+	public float attackDamage = 10f; 
 
 	// variables
 	private float attackCD;
@@ -82,7 +83,7 @@ public class AIScript : MonoBehaviour {
 		// do some animation
 
 		// hurt target
-		target.GetComponent<mainChaAct>().hurt(gameObject, 10f, 5f);
+		target.GetComponent<mainChaAct>().hurt(gameObject, attackDamage, 5f);
 
 		// reset CD
 		attackCD = attackMaxCD;
