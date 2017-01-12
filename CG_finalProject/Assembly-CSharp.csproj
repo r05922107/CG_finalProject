@@ -45,10 +45,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\PocketRPG Trails\Scripts\Effects\WeaponTrail.cs" />
-     <Compile Include="Assets\PocketRPG Trails\Scripts\Entities\BladeMaster.cs" />
-     <Compile Include="Assets\PocketRPG Trails\Scripts\Utility\AnimationController.cs" />
      <Compile Include="Assets\cha_data\Script\ScreenShot.cs" />
+     <Compile Include="Assets\survival_on_the_square\data\PocketRPG Trails\Scripts\Effects\WeaponTrail.cs" />
+     <Compile Include="Assets\survival_on_the_square\data\PocketRPG Trails\Scripts\Entities\BladeMaster.cs" />
+     <Compile Include="Assets\survival_on_the_square\data\PocketRPG Trails\Scripts\Utility\AnimationController.cs" />
+     <Compile Include="Assets\survival_on_the_square\data\Warrior Pack Bundle 3 FREE\Code\IKHands.cs" />
+     <Compile Include="Assets\survival_on_the_square\data\Warrior Pack Bundle 3 FREE\Code\SmoothFollow.cs" />
+     <Compile Include="Assets\survival_on_the_square\data\Warrior Pack Bundle 3 FREE\Code\WarriorAnimationDemoFREE.cs" />
+     <Compile Include="Assets\survival_on_the_square\script\AIScript.cs" />
+     <Compile Include="Assets\survival_on_the_square\script\HitEnemy.cs" />
+     <Compile Include="Assets\survival_on_the_square\script\mainChaAct.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
