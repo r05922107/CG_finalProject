@@ -105,7 +105,7 @@ public class AIScript : MonoBehaviour {
 		attackDirection.y = 0;
 		attackDirection = attackDirection.normalized;
 
-		rbody.velocity =  attackDirection * knockback ;
+		rbody.velocity =  attackDirection * knockback * 5;
 		//gameObject.transform.position = gameObject.transform.position + knockback * attackDirection;
 
 		// check dead

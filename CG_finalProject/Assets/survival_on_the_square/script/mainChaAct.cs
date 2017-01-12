@@ -14,6 +14,7 @@ public class mainChaAct : MonoBehaviour {
     public float mcAttackCD = 5;
     public float HP = 100f;
 
+	private Rigidbody rbody;
     private float inputH;
     private float inputV;
     Vector3 inputVec;
@@ -28,6 +29,7 @@ public class mainChaAct : MonoBehaviour {
     // Use this for initialization
     void Start () {
         anim = GetComponent<Animator>();
+		rbody = GetComponent<Rigidbody>();
 	
 	}
 	
@@ -116,9 +118,16 @@ public class mainChaAct : MonoBehaviour {
         // decrease HP
         HP -= damage;
 
+
+		// be knockback 
+		Vector3 attackDirection = attacker.transform.forward.normalized;
+		attackDirection.y = 0;
+		attackDirection = attackDirection.normalized;
+		rbody.velocity =  attackDirection * knockback * 5;
+
         // be knockback 
-        Vector3 attackDirection = attacker.transform.forward.normalized;
-        this.transform.position = this.transform.position + knockback * attackDirection;
+        //Vector3 attackDirection = attacker.transform.forward.normalized;
+        //this.transform.position = this.transform.position + knockback * attackDirection;
 
         // check dead
         if (HP <= 0)
