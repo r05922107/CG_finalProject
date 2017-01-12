@@ -56,8 +56,11 @@ public class AIScript : MonoBehaviour {
 		} else if (distance < 50000) { // move to player
 			enemyObject.transform.Translate (0, 0, enemySpeed * Time.smoothDeltaTime);
 		}
-	
-	}
+
+        fallDetect();
+
+
+    }
 
 
 	private void attack(GameObject target, int attackType){
@@ -87,13 +90,26 @@ public class AIScript : MonoBehaviour {
 		enemyObject.transform.position = enemyObject.transform.position + knockback * attackDirection;
 
 		// check dead
-		if (enemyHP <= 0 || enemyObject.transform.position.y < -20 ) { // if dead destroyed itself
+		if (enemyHP <= 0) { // if dead destroyed itself
 			Destroy (enemyObject);
 		}
 	}
 
+    private void fallDetect()
+    {
+        if (enemyObject.transform.position.y < -20f)
+        {
+            Destroy(enemyObject);
+        }
+    }
 
-	private float angle_360(Vector3 from_, Vector3 to_){  
+    public void dead() {
+        //when enemyHP = 0
+        //do something
+    }
+
+
+    private float angle_360(Vector3 from_, Vector3 to_){  
 		Vector3 v3 = Vector3.Cross(from_,to_);  
 		if(v3.y > 0)  
 			return Vector3.Angle(from_,to_);  
