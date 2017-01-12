@@ -6,9 +6,9 @@ public class AIScript : MonoBehaviour {
 	// Objects
 	public GameObject playerObject;
 	public GameObject enemyObject;
-
-	// properties
-	public float enemyHP = 100f;
+    public Animator anim;
+    // properties
+    public float enemyHP = 100f;
 	public int enemySpeed = 1;
 	public float enemyAttackCD = 3;
 	public int enemyRotateSpeed = 1;
@@ -21,7 +21,8 @@ public class AIScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		attackCD = 0;
-	}
+        anim = GetComponent<Animator>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -63,7 +64,8 @@ public class AIScript : MonoBehaviour {
 		//hurt (playerObject, 10, 5);
 		print("Attack !\n");
 
-		// attack animation
+        // attack animation
+        anim.Play("Attack1");
 		// do some animation
 
 		// hurt target

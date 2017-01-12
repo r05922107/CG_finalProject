@@ -10,12 +10,15 @@ public class mainChaAct : MonoBehaviour {
     public Animator anim;
     public float mSpeed = 0.1F;
     public float rSpeed = 1;
+    public float rotationSpeed = 30;
     public float mcAttackCD = 5;
     public float HP = 100f;
 
     private int counter = 0;
     private float inputH;
     private float inputV;
+    Vector3 inputVec;
+    Vector3 targetDirection;
     private float attackCD;
     //private bool attack;
 
@@ -34,19 +37,34 @@ public class mainChaAct : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        anim.Play("idle", -1, 0f);
-        inputH = Input.GetAxis("Horizontal");//獲取水平軸向按鍵
-        inputV = Input.GetAxis("Vertical");//獲取垂直軸向按鍵
-        anim.SetFloat("InputH", inputH);
-        anim.SetFloat("InputV", inputV);
-        transform.Translate(0, 0, mSpeed * inputV, Space.World);
-        transform.Translate(mSpeed * inputH, 0, 0, Space.World);
+        //anim.Play("Base.idle");
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            //hitBox.SetActive(true);
+            print("hit!");
+            attack();
+            counter = 30;
+        }
+
+        inputH = Input.GetAxisRaw("Horizontal");//獲取水平軸向按鍵
+        inputV = -(Input.GetAxisRaw("Vertical"));//獲取垂直軸向按鍵
+        inputVec = new Vector3(inputH, 0, inputV);
+
+        anim.SetFloat("InputH", inputV);
+        anim.SetFloat("InputV", -(inputH));
+
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack1")) {
+            UpdateMovement();
+        } 
         
 
+        /*
         fp = forwardPoint.transform.position;
         Vector2 dir2 = new Vector2(fp.x - transform.position.x, fp.z - transform.position.z);
         float angle = Vector2.Angle(dir2, new Vector2(inputH, inputV));
 
+        
         if ((inputH != 0 || inputV != 0) && angle > 5)
         {
             if (angle - way > 1)
@@ -57,12 +75,8 @@ public class mainChaAct : MonoBehaviour {
             transform.transform.Rotate(0, rSpeed * c, 0);
             way = angle;
         }
+        
 
-        if (Input.GetButtonDown("Fire1")) {
-            //hitBox.SetActive(true);
-			attack ();
-            counter = 30;
-        }
 
         if (counter > 0)
         {
@@ -73,25 +87,23 @@ public class mainChaAct : MonoBehaviour {
         {
             hitBox.SetActive(false);
         }
-        //float moveX = inputH * 50f * Time.deltaTime;
-        //float moveZ = inputV * 50f * Time.deltaTime;
-
-        //rigBody.velocity = new Vector3(moveX, 0f, moveZ);
+        */
 
 
-        //transform.RotateAround(transform.TransformPoint(transform.position), Vector3.up, 20 * Time.deltaTime);
-        //transform.Translate(0, 0, mSpeed * v);//根據水平軸向按鍵來前進或後退
-        //transform.Translate(mSpeed * h, 0, 0);//
 
     }
 	public void attack(){
 		// animation
 		anim.Play("Attack1");
 
+        //StartCoroutine(COStunPause(1f));
+
 		// get enemy
 		targetTransform = GameObject.FindGameObjectsWithTag("enemy");
-		foreach(GameObject enemy in targetTransform){ // each enemy
-			Vector3 direction = enemy.transform.position - myObject.transform.position;
+        
+        foreach (GameObject enemy in targetTransform){ // each enemy
+            //Physics.IgnoreCollision(myObject.transform.GetComponent<Collider>(), enemy.transform.GetComponent<Collider>());
+            Vector3 direction = enemy.transform.position - myObject.transform.position;
 			float distance = direction.magnitude;
 			float angle = angle_360(myObject.transform.forward,direction);
 
@@ -126,4 +138,52 @@ public class mainChaAct : MonoBehaviour {
 		else  
 			return 360-Vector3.Angle(from_,to_);  
 	}
+
+    public IEnumerator COStunPause(float pauseTime)
+    {
+        yield return new WaitForSeconds(pauseTime);
+    }
+
+    void UpdateMovement()
+    {
+        //get movement input from controls
+        //Vector3 motion = inputVec;
+
+        //reduce input for diagonal movement
+        //motion *= (Mathf.Abs(inputVec.x) == 1 && Mathf.Abs(inputVec.z) == 1) ? .7f : 1;
+        transform.Translate(0, 0, mSpeed * -(inputV), Space.World);
+        transform.Translate(mSpeed * inputH, 0, 0, Space.World);
+
+        RotateTowardMovementDirection();
+        GetCameraRelativeMovement();
+    }
+
+    void GetCameraRelativeMovement()
+    {
+        Transform cameraTransform = Camera.main.transform;
+
+        // Forward vector relative to the camera along the x-z plane   
+        Vector3 forward = cameraTransform.TransformDirection(Vector3.forward);
+        forward.y = 0;
+        forward = forward.normalized;
+
+        // Right vector relative to the camera
+        // Always orthogonal to the forward vector
+        Vector3 right = new Vector3(forward.z, 0, -forward.x);
+
+        //directional inputs
+        float v = Input.GetAxisRaw("Vertical");
+        float h = Input.GetAxisRaw("Horizontal");
+
+        // Target direction relative to the camera
+        targetDirection = h * right + v * forward;
+    }
+
+    void RotateTowardMovementDirection()
+    {
+        if (inputVec != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDirection), Time.deltaTime * rotationSpeed);
+        }
+    }
 }
