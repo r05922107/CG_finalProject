@@ -11,7 +11,7 @@ public class AIScript : MonoBehaviour {
     public float hp = 100f;
 	public int speed = 1;
 	public float attackMaxCD = 3;
-	public int attackDistance = 8;
+	public int attackDistance = 6;
 	public int trackDistance = 50000;
 
 	// variables
@@ -63,8 +63,6 @@ public class AIScript : MonoBehaviour {
 			// no target
 			// idle
 		}
-
-
 	}
 
 
@@ -110,6 +108,11 @@ public class AIScript : MonoBehaviour {
 		}
 	}
 
+    public void dead() {
+        //when enemyHP = 0
+        //do something
+    }
+
 
 
 
@@ -120,7 +123,7 @@ public class AIScript : MonoBehaviour {
 
 
 	// math function
-	private float angle_360(Vector3 from_, Vector3 to_){  
+    private float angle_360(Vector3 from_, Vector3 to_){  
 		Vector3 v3 = Vector3.Cross(from_,to_);  
 		if(v3.y > 0)  
 			return Vector3.Angle(from_,to_);  
