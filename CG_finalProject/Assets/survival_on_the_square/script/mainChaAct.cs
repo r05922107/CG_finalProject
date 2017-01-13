@@ -58,37 +58,7 @@ public class mainChaAct : MonoBehaviour {
 
         fallDetect();
 
-        /*
-        fp = forwardPoint.transform.position;
-        Vector2 dir2 = new Vector2(fp.x - transform.position.x, fp.z - transform.position.z);
-        float angle = Vector2.Angle(dir2, new Vector2(inputH, inputV));
-
         
-        if ((inputH != 0 || inputV != 0) && angle > 5)
-        {
-            if (angle - way > 1)
-            {
-                c = c * (-1);
-                Debug.Log("reverse!!!!!");
-            }
-            transform.transform.Rotate(0, rSpeed * c, 0);
-            way = angle;
-        }
-        
-
-
-        if (counter > 0)
-        {
-            counter--;
-        }
-
-        if (counter == 0)
-        {
-            hitBox.SetActive(false);
-        }
-        */
-
-		// update HpBar face to main camera
 		if (transform.FindChild ("HealthBar") != null ) {
 			Transform HealthBarTransform = transform.FindChild ("HealthBar");
 			HealthBarTransform.LookAt (HealthBarTransform.position + Camera.main.transform.rotation * Vector3.back,
@@ -124,9 +94,15 @@ public class mainChaAct : MonoBehaviour {
         // decrease HP
         HP -= damage;
 
+        // update HpBar
+        if (transform.FindChild("HealthBar") != null && transform.FindChild("HealthBar").FindChild("HpBar") != null)
+        {
+            Transform HpBarTransform = transform.FindChild("HealthBar").FindChild("HpBar");
+            HpBarTransform.localScale = new Vector3(HP / 100f, HpBarTransform.localScale.y, HpBarTransform.localScale.z);
+        }
 
-		// be knockback 
-		Vector3 attackDirection = attacker.transform.forward.normalized;
+        // be knockback 
+        Vector3 attackDirection = attacker.transform.forward.normalized;
 		attackDirection.y = 0;
 		attackDirection = attackDirection.normalized;
 		rbody.velocity =  attackDirection * knockback * 5;

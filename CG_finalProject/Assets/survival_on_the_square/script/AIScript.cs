@@ -15,6 +15,8 @@ public class AIScript : MonoBehaviour {
     private float attackMaxCD = 3f;
     private float attackDistance = 6f;
     private float attackDamage = 10f;
+    private float attackKnockBack = 5f;
+    private float defend = 0f;
     private float knockDefend = 0f;
     public int enemyType;
 
@@ -31,19 +33,21 @@ public class AIScript : MonoBehaviour {
 
         if (enemyType == 1)  //spear
         {
-            hp = 80f;
             attackMaxCD = 3f;
             attackDistance = 7f;
             attackDamage = 10f;
             speed = 4.5f;
-        }else if (enemyType == 2)  //hammer
+            attackKnockBack = 4f;
+        }
+        else if (enemyType == 2)  //hammer
         {
-            hp = 120f;
             attackMaxCD = 4f;
             attackDistance = 5.5f;
             attackDamage = 20f;
             speed = 2.5f;
             knockDefend = 1f;
+            defend = 2f;
+            attackKnockBack = 7f;
         }
         else if (enemyType == 3)  //swordman
         {
@@ -52,6 +56,7 @@ public class AIScript : MonoBehaviour {
             attackDistance = 6f;
             attackDamage = 12f;
             speed = 3.5f;
+            defend = 1f;
         }
         attackCD = 0;
         attacking = false;
@@ -136,7 +141,7 @@ public class AIScript : MonoBehaviour {
             if (attackTime == 0) {
                 if (targetDirection.magnitude < attackDistance)
                 {
-                    target.GetComponent<mainChaAct>().hurt(gameObject, attackDamage, 5f);
+                    target.GetComponent<mainChaAct>().hurt(gameObject, attackDamage, attackKnockBack);
                 }
 
                 // reset CD
@@ -160,10 +165,17 @@ public class AIScript : MonoBehaviour {
 
 
 		// decrease HP
-		hp -= damage;
+		hp -= (damage - defend);
 
-		// be knockback 
-		Vector3 attackDirection = attacker.transform.forward.normalized;
+        // update HpBar
+        if (transform.FindChild("HealthBar") != null && transform.FindChild("HealthBar").FindChild("HpBar") != null)
+        {
+            Transform HpBarTransform = transform.FindChild("HealthBar").FindChild("HpBar");
+            HpBarTransform.localScale = new Vector3(hp / 100f, HpBarTransform.localScale.y, HpBarTransform.localScale.z);
+        }
+
+        // be knockback 
+        Vector3 attackDirection = attacker.transform.forward.normalized;
 		attackDirection.y = 0;
 		attackDirection = attackDirection.normalized;
 
