@@ -2,10 +2,9 @@
 using System.Collections;
 
 public class AIScript : MonoBehaviour {
-
-    // Objects
-    public GameObject enviroment;
 	
+	// Objects
+	public GameObject trackObject;
     private Animator anim;
 	private Rigidbody rbody;
 
@@ -15,11 +14,10 @@ public class AIScript : MonoBehaviour {
 	public float trackDistance = 50000f;
 	public float attackMaxCD = 3f;
 	public float attackDistance = 6f;
-	public float attackDamage = 10f;
+	public float attackDamage = 10f; 
 
-    // variables
-    private GameObject trackObject;
-    private float attackCD;
+	// variables
+	private float attackCD;
     private bool attacking;
     private int attackTime;
     private int thisTypeAttackTime = 20;
@@ -33,7 +31,6 @@ public class AIScript : MonoBehaviour {
         attackTime = thisTypeAttackTime;
         anim = GetComponent<Animator>();
 		rbody = GetComponent<Rigidbody>();
-        trackObject = (GameObject)enviroment.GetComponent<enviroment>().mainCharacter;
     }
 	
 	// update
