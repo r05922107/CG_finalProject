@@ -6,13 +6,13 @@ public class mainChaAct : MonoBehaviour {
 	public GameObject myObject;
 	public GameObject forwardPoint;
     public GameObject effect;//特效
+    public GameObject effect2;//特效
     public Rigidbody rigBody;
     public Animator anim;
     public float mSpeed = 0.1F;
     public float rSpeed = 1;
     public float rotationSpeed = 30;
     public float mcAttackCD = 5;
-    public float attackDistance = 6f;
     public float HP = 100f;
 
 	private Rigidbody rbody;
@@ -21,9 +21,13 @@ public class mainChaAct : MonoBehaviour {
     Vector3 inputVec;
     Vector3 targetDirection;
     private float attackCD;
+    private float superAttackCD;
+    private float attackDistance = 6f;
+    private float SuperAttackDistance = 10f;
+    private float mcSuperAttackCD = 600;
     //private bool attack;
 
-	GameObject[] targetTransform;
+    GameObject[] targetTransform;
 
     
 
@@ -31,8 +35,10 @@ public class mainChaAct : MonoBehaviour {
     void Start () {
         anim = GetComponent<Animator>();
 		rbody = GetComponent<Rigidbody>();
-	
-	}
+        superAttackCD = 0;
+
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -44,6 +50,19 @@ public class mainChaAct : MonoBehaviour {
             print("hit!");
             attack();
         }
+
+        if (Input.GetButtonDown("superFire") && superAttackCD == 0)
+        {
+            //hitBox.SetActive(true);
+            print("hit!");
+            superAttack();
+            superAttackCD = mcSuperAttackCD;
+        }
+
+        if (superAttackCD > 0) {
+            superAttackCD--;
+        }
+        
 
         inputH = Input.GetAxisRaw("Horizontal");//獲取水平軸向按鍵
         inputV = -(Input.GetAxisRaw("Vertical"));//獲取垂直軸向按鍵
@@ -58,7 +77,6 @@ public class mainChaAct : MonoBehaviour {
 
         fallDetect();
 
-        
 		if (transform.FindChild ("HealthBar") != null ) {
 			Transform HealthBarTransform = transform.FindChild ("HealthBar");
 			HealthBarTransform.LookAt (HealthBarTransform.position + Camera.main.transform.rotation * Vector3.back,
@@ -87,6 +105,31 @@ public class mainChaAct : MonoBehaviour {
             }
 		}
 	}
+
+    public void superAttack()
+    {
+        // animation
+        anim.Play("Attack2");
+
+        //StartCoroutine(COStunPause(1f));
+
+        // get enemy
+        targetTransform = GameObject.FindGameObjectsWithTag("enemy");
+
+        foreach (GameObject enemy in targetTransform)
+        { // each enemy
+            //Physics.IgnoreCollision(myObject.transform.GetComponent<Collider>(), enemy.transform.GetComponent<Collider>());
+            Vector3 direction = enemy.transform.position - myObject.transform.position;
+            float distance = direction.magnitude;
+            float angle = angle_360(myObject.transform.forward, direction);
+
+            if (distance < attackDistance && (angle < 40 || angle > 320))
+            {
+                enemy.GetComponent<AIScript>().hurt(myObject, 30f, 14f);
+                Instantiate(effect2, transform.position + new Vector3(0, 1.5f, 0) + direction * 0.5f, transform.rotation);
+            }
+        }
+    }
 
     public void hurt(GameObject attacker, float damage, float knockback)
     {

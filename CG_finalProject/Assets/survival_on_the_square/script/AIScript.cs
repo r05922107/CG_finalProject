@@ -10,11 +10,11 @@ public class AIScript : MonoBehaviour {
 
     // properties
     private float hp = 100f;
-    private float speed = 1f;
+    private float speed;
     private float trackDistance = 50000f;
-    private float attackMaxCD = 3f;
-    private float attackDistance = 6f;
-    private float attackDamage = 10f;
+    private float attackMaxCD;
+    private float attackDistance;
+    private float attackDamage;
     private float attackKnockBack = 5f;
     private float defend = 0f;
     private float knockDefend = 0f;
@@ -35,19 +35,21 @@ public class AIScript : MonoBehaviour {
         {
             attackMaxCD = 3f;
             attackDistance = 7f;
-            attackDamage = 10f;
+            attackDamage = 5f;
             speed = 4.5f;
             attackKnockBack = 4f;
+            thisTypeAttackTime = 30;
         }
         else if (enemyType == 2)  //hammer
         {
             attackMaxCD = 4f;
-            attackDistance = 5.5f;
+            attackDistance = 5f;
             attackDamage = 20f;
             speed = 2.5f;
             knockDefend = 1f;
             defend = 2f;
             attackKnockBack = 7f;
+            thisTypeAttackTime = 30;
         }
         else if (enemyType == 3)  //swordman
         {
@@ -91,10 +93,11 @@ public class AIScript : MonoBehaviour {
 		if (trackObject != null) {
 			// Rotate forward to Target  
 			Vector3 forward = gameObject.transform.forward;
-			forward.y = 0;
+			//forward.y = 0;
 			forward = forward.normalized;
-			targetDirection = (trackObject.transform.position - gameObject.transform.position);
-			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDirection), Time.deltaTime * 5 );
+            targetDirection = (trackObject.transform.position - gameObject.transform.position);
+            //targetDirection = new Vector3(trackObject.transform.position.x - gameObject.transform.position.x, 0, trackObject.transform.position.z - gameObject.transform.position.z);
+			
 
 			// Attack or Move
 			if (targetDirection.magnitude < attackDistance || attacking) { // attack target
@@ -104,8 +107,9 @@ public class AIScript : MonoBehaviour {
 					// CD-ing
 					// idle
 				}
-			}else if (targetDirection.magnitude < trackDistance &&  (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack1"))) { // move to player
-				gameObject.transform.Translate (0, 0, speed * Time.smoothDeltaTime);
+			}else if (targetDirection.magnitude < trackDistance &&  (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack1")) && gameObject.transform.position.y > -10f) { // move to player
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDirection), Time.deltaTime * 5);
+                gameObject.transform.Translate (0, 0, speed * Time.smoothDeltaTime);
 			}
 		} else {
 			// no target
@@ -129,6 +133,8 @@ public class AIScript : MonoBehaviour {
 
     // attack target by hurt function in target
     private void attack(GameObject target, int attackType){
+        Vector3 direction = trackObject.transform.position - gameObject.transform.position;
+        float angle = angle_360(gameObject.transform.forward, direction);
         // attack animation
         if (!attacking)
         {
@@ -139,7 +145,7 @@ public class AIScript : MonoBehaviour {
         {
             // hurt target
             if (attackTime == 0) {
-                if (targetDirection.magnitude < attackDistance)
+                if (targetDirection.magnitude < attackDistance &&  (angle < 30 || angle > 330))
                 {
                     target.GetComponent<mainChaAct>().hurt(gameObject, attackDamage, attackKnockBack);
                 }
