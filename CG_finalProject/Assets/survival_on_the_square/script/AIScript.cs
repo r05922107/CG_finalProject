@@ -9,12 +9,14 @@ public class AIScript : MonoBehaviour {
 	private Rigidbody rbody;
 
     // properties
-    public float hp = 100f;
-	public float speed = 1f;
-	public float trackDistance = 50000f;
-	public float attackMaxCD = 3f;
-	public float attackDistance = 6f;
-	public float attackDamage = 10f; 
+    private float hp = 100f;
+    private float speed = 1f;
+    private float trackDistance = 50000f;
+    private float attackMaxCD = 3f;
+    private float attackDistance = 6f;
+    private float attackDamage = 10f;
+    private float knockDefend = 0f;
+    public int enemyType;
 
 	// variables
 	private float attackCD;
@@ -26,11 +28,39 @@ public class AIScript : MonoBehaviour {
 
     // initial
     void Start () {
-		attackCD = 0;
+
+        if (enemyType == 1)  //spear
+        {
+            hp = 80f;
+            attackMaxCD = 3f;
+            attackDistance = 7f;
+            attackDamage = 10f;
+            speed = 4.5f;
+        }else if (enemyType == 2)  //hammer
+        {
+            hp = 120f;
+            attackMaxCD = 4f;
+            attackDistance = 5.5f;
+            attackDamage = 20f;
+            speed = 2.5f;
+            knockDefend = 1f;
+        }
+        else if (enemyType == 3)  //swordman
+        {
+            hp = 100f;
+            attackMaxCD = 2.5f;
+            attackDistance = 6f;
+            attackDamage = 12f;
+            speed = 3.5f;
+        }
+        attackCD = 0;
         attacking = false;
         attackTime = thisTypeAttackTime;
         anim = GetComponent<Animator>();
 		rbody = GetComponent<Rigidbody>();
+
+        
+
     }
 	
 	// update
@@ -127,18 +157,12 @@ public class AIScript : MonoBehaviour {
 		// decrease HP
 		hp -= damage;
 
-		// update HpBar
-		if (transform.FindChild ("HealthBar") != null && transform.FindChild ("HealthBar").FindChild("HpBar") != null) {
-			Transform HpBarTransform = transform.FindChild ("HealthBar").FindChild ("HpBar");
-			HpBarTransform.localScale = new Vector3(hp/100f, HpBarTransform.localScale.y , HpBarTransform.localScale.z);
-		}
-
 		// be knockback 
 		Vector3 attackDirection = attacker.transform.forward.normalized;
 		attackDirection.y = 0;
 		attackDirection = attackDirection.normalized;
 
-		rbody.velocity =  attackDirection * knockback * 5;
+		rbody.velocity =  attackDirection * (knockback- knockDefend) * 5;
 		//gameObject.transform.position = gameObject.transform.position + knockback * attackDirection;
 
 		// check dead

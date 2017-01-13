@@ -12,6 +12,7 @@ public class mainChaAct : MonoBehaviour {
     public float rSpeed = 1;
     public float rotationSpeed = 30;
     public float mcAttackCD = 5;
+    public float attackDistance = 6f;
     public float HP = 100f;
 
 	private Rigidbody rbody;
@@ -105,7 +106,7 @@ public class mainChaAct : MonoBehaviour {
 			float distance = direction.magnitude;
 			float angle = angle_360(myObject.transform.forward,direction);
 
-			if(distance < 10 && (angle < 30 || angle > 330)){
+			if(distance < attackDistance && (angle < 30 || angle > 330)){
 				enemy.GetComponent<AIScript>().hurt(myObject, 10f, 5f);
                 Instantiate(effect, transform.position + new Vector3(0, 1.5f, 0) + direction*0.5f, transform.rotation);
             }
@@ -117,12 +118,6 @@ public class mainChaAct : MonoBehaviour {
 		anim.Play("GetHit");
         // decrease HP
         HP -= damage;
-
-		// update HpBar
-		if (transform.FindChild ("HealthBar") != null && transform.FindChild ("HealthBar").FindChild("HpBar") != null) {
-			Transform HpBarTransform = transform.FindChild ("HealthBar").FindChild ("HpBar");
-			HpBarTransform.localScale = new Vector3(HP/100f, HpBarTransform.localScale.y , HpBarTransform.localScale.z);
-		}
 
 
 		// be knockback 
