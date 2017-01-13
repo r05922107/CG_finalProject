@@ -72,7 +72,12 @@ public class AIScript : MonoBehaviour {
 		motionUpdate ();
         fallDetect();
 
-
+		// update HpBar face to main camera
+		if (transform.FindChild ("HealthBar") != null ) {
+			Transform HealthBarTransform = transform.FindChild ("HealthBar");
+			HealthBarTransform.LookAt (HealthBarTransform.position + Camera.main.transform.rotation * Vector3.back,
+				Camera.main.transform.rotation * Vector3.down);
+		}
     }
 		
 	// motion 
