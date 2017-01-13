@@ -18,11 +18,17 @@ public class AIScript : MonoBehaviour {
 
 	// variables
 	private float attackCD;
+    private bool attacking;
+    private int attackTime;
+    private int thisTypeAttackTime = 20;
+    private Vector3 targetDirection;
 
 
-	// initial
-	void Start () {
+    // initial
+    void Start () {
 		attackCD = 0;
+        attacking = false;
+        attackTime = thisTypeAttackTime;
         anim = GetComponent<Animator>();
 		rbody = GetComponent<Rigidbody>();
     }
@@ -47,12 +53,12 @@ public class AIScript : MonoBehaviour {
 			Vector3 forward = gameObject.transform.forward;
 			forward.y = 0;
 			forward = forward.normalized;
-			Vector3 targetDirection = (trackObject.transform.position - gameObject.transform.position);
+			targetDirection = (trackObject.transform.position - gameObject.transform.position);
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDirection), Time.deltaTime * 5 );
 
 			// Attack or Move
-			if (targetDirection.magnitude < attackDistance) { // attack target
-				if (attackCD == 0) { // attack
+			if (targetDirection.magnitude < attackDistance || attacking) { // attack target
+				if (attackCD == 0)  { // attack
 					attack (trackObject, 0);
 				} else {
 					// CD-ing
@@ -81,21 +87,34 @@ public class AIScript : MonoBehaviour {
     }
 
 
-
-
-
-
     // attack target by hurt function in target
     private void attack(GameObject target, int attackType){
         // attack animation
-        anim.Play("Attack1");
+        if (!attacking)
+        {
+            attacking = true;
+            anim.Play("Attack1");
+        }
+        else
+        {
+            // hurt target
+            if (attackTime == 0) {
+                if (targetDirection.magnitude < attackDistance)
+                {
+                    target.GetComponent<mainChaAct>().hurt(gameObject, attackDamage, 5f);
+                }
+
+                // reset CD
+                attacking = false;
+                attackCD = attackMaxCD;
+                attackTime = thisTypeAttackTime;
+            }
+            
+            attackTime--;
+            
+        }
 		// do some animation
 
-		// hurt target
-		target.GetComponent<mainChaAct>().hurt(gameObject, attackDamage, 5f);
-
-		// reset CD
-		attackCD = attackMaxCD;
 	}
 
 
