@@ -34,8 +34,10 @@ public class AIScript : MonoBehaviour {
 
 		// update motions
 		motionUpdate ();
+        fallDetect();
 
-	}
+
+    }
 		
 	// motion 
 	private void motionUpdate(){
@@ -70,15 +72,21 @@ public class AIScript : MonoBehaviour {
 
 
 
+    private void fallDetect()
+    {
+        if (transform.position.y < -20f)
+        {
+            Destroy(gameObject);
+        }
+    }
 
 
 
 
 
 
-
-	// attack target by hurt function in target
-	private void attack(GameObject target, int attackType){
+    // attack target by hurt function in target
+    private void attack(GameObject target, int attackType){
         // attack animation
         anim.Play("Attack1");
 		// do some animation
