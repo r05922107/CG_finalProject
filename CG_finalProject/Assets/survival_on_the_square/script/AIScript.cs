@@ -127,6 +127,12 @@ public class AIScript : MonoBehaviour {
 		// decrease HP
 		hp -= damage;
 
+		// update HpBar
+		if (transform.FindChild ("HealthBar") != null && transform.FindChild ("HealthBar").FindChild("HpBar") != null) {
+			Transform HpBarTransform = transform.FindChild ("HealthBar").FindChild ("HpBar");
+			HpBarTransform.localScale = new Vector3(hp/100f, HpBarTransform.localScale.y , HpBarTransform.localScale.z);
+		}
+
 		// be knockback 
 		Vector3 attackDirection = attacker.transform.forward.normalized;
 		attackDirection.y = 0;
