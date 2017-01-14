@@ -93,14 +93,15 @@ public class AIScript : MonoBehaviour {
 		if (trackObject != null) {
 			// Rotate forward to Target  
 			Vector3 forward = gameObject.transform.forward;
-			//forward.y = 0;
+			forward.y = 0;
 			forward = forward.normalized;
             targetDirection = (trackObject.transform.position - gameObject.transform.position);
+			float angle = angle_360(gameObject.transform.forward, targetDirection);
             //targetDirection = new Vector3(trackObject.transform.position.x - gameObject.transform.position.x, 0, trackObject.transform.position.z - gameObject.transform.position.z);
 			
 
 			// Attack or Move
-			if (targetDirection.magnitude < attackDistance || attacking) { // attack target
+			if (targetDirection.magnitude < attackDistance && (angle < 30 || angle > 330) || attacking) { // attack target
 				if (attackCD == 0)  { // attack
 					attack (trackObject, 0);
 				} else {
@@ -115,8 +116,6 @@ public class AIScript : MonoBehaviour {
 			// no target
 			// idle
 		}
-
-
 	}
 
 
@@ -172,6 +171,14 @@ public class AIScript : MonoBehaviour {
 
 		// decrease HP
 		hp -= (damage - defend);
+
+		// damage text animation
+		string damageText = ((int)(damage - defend)).ToString();
+		GameObject DamageTextSystem = GameObject.Find("DamageTextSystem");
+		if(DamageTextSystem != null){
+			DamageTextSystem.GetComponent<FloatingTextController>().createFloatingText(damageText,transform);
+		}
+
 
         // update HpBar
         if (transform.FindChild("HealthBar") != null && transform.FindChild("HealthBar").FindChild("HpBar") != null)

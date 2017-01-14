@@ -8,7 +8,7 @@ public class FloatingText : MonoBehaviour {
 
 
 
-	void Start(){
+	void OnEnable(){
 		AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo (0);
 		Destroy (gameObject, clipInfo [0].clip.length);
 		damageText = animator.GetComponent<Text> ();

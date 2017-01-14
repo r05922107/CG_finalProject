@@ -47,14 +47,14 @@ public class mainChaAct : MonoBehaviour {
         if (Input.GetButtonDown("Fire1"))
         {
             //hitBox.SetActive(true);
-            print("hit!");
+            //print("hit!");
             attack();
         }
 
         if (Input.GetButtonDown("superFire") && superAttackCD == 0)
         {
             //hitBox.SetActive(true);
-            print("hit!");
+            //print("hit!");
             superAttack();
             superAttackCD = mcSuperAttackCD;
         }
@@ -137,6 +137,13 @@ public class mainChaAct : MonoBehaviour {
         // decrease HP
         HP -= damage;
 
+		// damage text animation
+		string damageText = ((int)(damage)).ToString();
+		GameObject DamageTextSystem = GameObject.Find("DamageTextSystem");
+		if(DamageTextSystem != null){
+			DamageTextSystem.GetComponent<FloatingTextController>().createFloatingText(damageText,transform);
+		}
+
         // update HpBar
         if (transform.FindChild("HealthBar") != null && transform.FindChild("HealthBar").FindChild("HpBar") != null)
         {
@@ -218,7 +225,7 @@ public class mainChaAct : MonoBehaviour {
 
     void RotateTowardMovementDirection()
     {
-        if (inputVec != Vector3.zero)
+		if (targetDirection != Vector3.zero)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDirection), Time.deltaTime * rotationSpeed);
         }
