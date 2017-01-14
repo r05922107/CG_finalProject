@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HPBar : MonoBehaviour {
+public class FloatingTextController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -10,6 +10,6 @@ public class HPBar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.rotation = Camera.main.transform.rotation;
+	
 	}
 }
