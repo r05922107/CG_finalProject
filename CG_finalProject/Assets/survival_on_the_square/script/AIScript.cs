@@ -61,6 +61,18 @@ public class AIScript : MonoBehaviour {
             speed = 3.5f;
             defend = 1f;
         }
+		else if (enemyType == 4)  //Boss
+		{
+			hp = 100f;
+			attackMaxCD = 1.5f;
+			attackDistance = 6f;
+			attackDamage = 35f;
+			speed = 3f;
+			knockDefend = 999f;
+			defend = 7f;
+			attackKnockBack = 10f;
+			thisTypeAttackTime = 30;
+		}
         attackCD = 0;
         attacking = false;
         attackTime = thisTypeAttackTime;
@@ -170,13 +182,13 @@ public class AIScript : MonoBehaviour {
 
 	// be hurt
 	public void hurt(GameObject attacker, float damage, float knockback){
-
-
+		
 		// decrease HP
-		hp -= (damage - defend);
+		float heDecrease = (damage - defend) < 1 ? 1 : (damage - defend);
+		hp -= heDecrease;
 
 		// damage text animation
-		string damageText = ((int)(damage - defend)).ToString();
+		string damageText = ((int)(heDecrease)).ToString();
 		GameObject DamageTextSystem = GameObject.Find("DamageTextSystem");
 		if(DamageTextSystem != null){
 			DamageTextSystem.GetComponent<FloatingTextController>().createFloatingText(damageText,transform);
@@ -194,9 +206,8 @@ public class AIScript : MonoBehaviour {
         Vector3 attackDirection = attacker.transform.forward.normalized;
 		attackDirection.y = 0;
 		attackDirection = attackDirection.normalized;
-
-		rbody.velocity =  attackDirection * (knockback- knockDefend) * 5;
-		//gameObject.transform.position = gameObject.transform.position + knockback * attackDirection;
+		float knockbackDistance = (knockback- knockDefend) < 1 ? 1 : (knockback- knockDefend) * 5;
+		rbody.velocity =  attackDirection * knockbackDistance;
 
 		// check dead
 		if (hp <= 0 || gameObject.transform.position.y < -20 ) {
