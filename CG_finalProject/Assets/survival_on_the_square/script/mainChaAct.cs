@@ -131,6 +131,20 @@ public class mainChaAct : MonoBehaviour {
         }
     }
 
+    public void stageReward(int restore) {
+        HP += restore;
+        if (HP>100) {
+            HP = 100;
+        }
+
+        // update HpBar
+        if (transform.FindChild("HealthBar") != null && transform.FindChild("HealthBar").FindChild("HpBar") != null)
+        {
+            Transform HpBarTransform = transform.FindChild("HealthBar").FindChild("HpBar");
+            HpBarTransform.localScale = new Vector3(HP / 100f, HpBarTransform.localScale.y, HpBarTransform.localScale.z);
+        }
+    }
+
     public void hurt(GameObject attacker, float damage, float knockback)
     {
 		anim.Play("GetHit");

@@ -15,6 +15,8 @@ public class stageProducer : MonoBehaviour {
     public GameObject enemy3;
     public GameObject enemy4;
 
+    private int enemyScore;
+    private int stageNum;
     private Vector3 pos1;
     private Vector3 pos2;
     private Vector3 pos3;
@@ -23,8 +25,9 @@ public class stageProducer : MonoBehaviour {
     private Vector3 pos6;
     private Vector3 pos7;
     private Vector3 pos8;
-
     private Vector3 posMid;
+
+    private mainChaAct mScript;
 
 
     // Use this for initialization
@@ -42,6 +45,9 @@ public class stageProducer : MonoBehaviour {
         enemy2.GetComponent<AIScript>().trackObject = mainCharacter;
         enemy3.GetComponent<AIScript>().trackObject = mainCharacter;
         //enemy4.GetComponent<AIScript>().trackObject = mainCharacter;
+        enemyScore = 0;
+        stageNum = 0;
+        mScript = (mainChaAct)mainCharacter.GetComponent<mainChaAct>();
 
     }
 	
@@ -70,5 +76,78 @@ public class stageProducer : MonoBehaviour {
             Instantiate(enemy3, pos7, transform.rotation);
         }
 
+
+        //關卡設計
+        if (stageNum == 0)
+        {
+            stageNum++;
+            enemyScore = 0;
+            //wait(5);
+            Instantiate(enemy3, pos1, transform.rotation);
+        }
+
+        if (stageNum == 1 && enemyScore == 1) {
+            stageNum++;
+            enemyScore = 0;
+            mScript.stageReward(33);
+            //wait(5);
+            Instantiate(enemy1, pos3, transform.rotation);
+        }
+
+        if (stageNum == 2 && enemyScore == 1) {
+            stageNum++;
+            enemyScore = 0;
+            mScript.stageReward(33);
+            //wait(5);
+            Instantiate(enemy2, posMid, transform.rotation);
+        }
+
+        if (stageNum == 3 && enemyScore == 1)
+        {
+            stageNum++;
+            enemyScore = 0;
+            mScript.stageReward(33);
+            //wait(5);
+            Instantiate(enemy3, pos5, transform.rotation);
+            Instantiate(enemy3, pos7, transform.rotation);
+            Instantiate(enemy2, posMid, transform.rotation);
+        }
+
+        if (stageNum == 4 && enemyScore == 3)
+        {
+            stageNum++;
+            enemyScore = 0;
+            mScript.stageReward(33);
+            //wait(5);
+            Instantiate(enemy3, pos6, transform.rotation);
+            Instantiate(enemy3, pos8, transform.rotation);
+            Instantiate(enemy1, pos1, transform.rotation);
+            Instantiate(enemy1, pos3, transform.rotation);
+        }
+
+        if (stageNum == 5 && enemyScore == 4)
+        {
+            stageNum++;
+            enemyScore = 0;
+            mScript.stageReward(33);
+            //wait(5);
+            Instantiate(enemy3, pos6, transform.rotation);
+            Instantiate(enemy3, pos8, transform.rotation);
+            Instantiate(enemy1, pos1, transform.rotation);
+            Instantiate(enemy1, pos3, transform.rotation);
+            Instantiate(enemy2, posMid, transform.rotation);
+        }
+
+
+
     }
+
+    IEnumerator wait(int second) {
+        yield return new WaitForSeconds(second);
+    }
+
+    public void killEnemy() {
+        enemyScore++;
+    }
+
 }

@@ -26,6 +26,7 @@ public class AIScript : MonoBehaviour {
     private int attackTime;
     private int thisTypeAttackTime = 20;
     private Vector3 targetDirection;
+    private GameObject LandBox;
 
 
     // initial
@@ -85,6 +86,8 @@ public class AIScript : MonoBehaviour {
 			HealthBarTransform.LookAt (HealthBarTransform.position + Camera.main.transform.rotation * Vector3.back,
 				Camera.main.transform.rotation * Vector3.down);
 		}
+
+        LandBox = GameObject.Find("LandBox");
     }
 		
 	// motion 
@@ -125,7 +128,7 @@ public class AIScript : MonoBehaviour {
     {
         if (transform.position.y < -20f)
         {
-            Destroy(gameObject);
+            dead();
         }
     }
 
@@ -197,13 +200,17 @@ public class AIScript : MonoBehaviour {
 
 		// check dead
 		if (hp <= 0 || gameObject.transform.position.y < -20 ) {
-			Destroy (transform.root.gameObject);
-		}
+            dead();
+
+        }
 	}
 
     public void dead() {
         //when enemyHP = 0
         //do something
+        LandBox.GetComponent<stageProducer>().killEnemy();
+
+        Destroy(gameObject);
     }
 
 
