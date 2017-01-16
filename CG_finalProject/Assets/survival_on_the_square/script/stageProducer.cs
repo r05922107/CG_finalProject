@@ -62,6 +62,8 @@ public class stageProducer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        /*
         if (Input.GetButtonDown("Fire2"))
         {
             //產生敵人在發射點
@@ -84,6 +86,7 @@ public class stageProducer : MonoBehaviour {
             Instantiate(enemy3, pos5, transform.rotation);
             Instantiate(enemy3, pos7, transform.rotation);
         }
+        */
 
 
         //關卡設計
