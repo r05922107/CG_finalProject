@@ -153,9 +153,9 @@ public class mainChaAct : MonoBehaviour {
 
 		// damage text animation
 		string damageText = ((int)(damage)).ToString();
-		GameObject DamageTextSystem = GameObject.Find("DamageTextSystem");
-		if(DamageTextSystem != null){
-			DamageTextSystem.GetComponent<FloatingTextController>().createFloatingText(damageText,transform);
+		GameObject TestSystem = GameObject.Find("TextSystem");
+		if(TestSystem != null){
+			TestSystem.GetComponent<FloatingTextController>().createDamageText(damageText,transform);
 		}
 
         // update HpBar
