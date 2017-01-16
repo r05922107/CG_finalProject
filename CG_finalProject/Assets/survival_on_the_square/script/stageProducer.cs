@@ -44,7 +44,7 @@ public class stageProducer : MonoBehaviour {
         enemy1.GetComponent<AIScript>().trackObject = mainCharacter;
         enemy2.GetComponent<AIScript>().trackObject = mainCharacter;
         enemy3.GetComponent<AIScript>().trackObject = mainCharacter;
-        //enemy4.GetComponent<AIScript>().trackObject = mainCharacter;
+        enemy4.GetComponent<AIScript>().trackObject = mainCharacter;
         enemyScore = 0;
         stageNum = 0;
         mScript = (mainChaAct)mainCharacter.GetComponent<mainChaAct>();
@@ -136,6 +136,15 @@ public class stageProducer : MonoBehaviour {
             Instantiate(enemy1, pos1, transform.rotation);
             Instantiate(enemy1, pos3, transform.rotation);
             Instantiate(enemy2, posMid, transform.rotation);
+        }
+
+        if (stageNum == 6 && enemyScore == 5)
+        {
+            stageNum++;
+            enemyScore = 0;
+            mScript.stageReward(33);
+            //wait(5);
+            Instantiate(enemy4, posMid, transform.rotation);
         }
 
 
