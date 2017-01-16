@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class stageProducer : MonoBehaviour {
@@ -26,6 +27,11 @@ public class stageProducer : MonoBehaviour {
     private Vector3 pos7;
     private Vector3 pos8;
     private Vector3 posMid;
+    private GameObject stageClearTextObject;
+    private Text stageNumText;
+    private int clearCounter = 0;
+    private int maxClearCounter = 180;
+    private bool prepareStage = false;
 
     private mainChaAct mScript;
 
@@ -48,7 +54,9 @@ public class stageProducer : MonoBehaviour {
         enemyScore = 0;
         stageNum = 0;
         mScript = (mainChaAct)mainCharacter.GetComponent<mainChaAct>();
-
+        stageClearTextObject = transform.FindChild("Main Camera").FindChild("stageCanvas").FindChild("stageClear").gameObject;
+        stageNumText = transform.FindChild("Main Camera").FindChild("stageCanvas").FindChild("stageNum").GetComponent<Text>();
+        stageClearTextObject.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -76,37 +84,42 @@ public class stageProducer : MonoBehaviour {
             Instantiate(enemy3, pos7, transform.rotation);
         }
 
+        if (prepareStage)
+        {
+            if (clearCounter > 0)
+            {
+                clearCounter--;
+            }
+            else {
+                prepareStage = false;
+            }
+        }
+
 
         //關卡設計
         if (stageNum == 0)
         {
-            stageNum++;
-            enemyScore = 0;
+            stageInit();
             //wait(5);
             Instantiate(enemy3, pos1, transform.rotation);
         }
 
         if (stageNum == 1 && enemyScore == 1) {
-            stageNum++;
-            enemyScore = 0;
-            mScript.stageReward(33);
+            
+            stageInit();
             //wait(5);
             Instantiate(enemy1, pos3, transform.rotation);
         }
 
         if (stageNum == 2 && enemyScore == 1) {
-            stageNum++;
-            enemyScore = 0;
-            mScript.stageReward(33);
+            stageInit();
             //wait(5);
             Instantiate(enemy2, posMid, transform.rotation);
         }
 
         if (stageNum == 3 && enemyScore == 1)
         {
-            stageNum++;
-            enemyScore = 0;
-            mScript.stageReward(33);
+            stageInit();
             //wait(5);
             Instantiate(enemy3, pos5, transform.rotation);
             Instantiate(enemy3, pos7, transform.rotation);
@@ -115,9 +128,7 @@ public class stageProducer : MonoBehaviour {
 
         if (stageNum == 4 && enemyScore == 3)
         {
-            stageNum++;
-            enemyScore = 0;
-            mScript.stageReward(33);
+            stageInit();
             //wait(5);
             Instantiate(enemy3, pos6, transform.rotation);
             Instantiate(enemy3, pos8, transform.rotation);
@@ -127,9 +138,7 @@ public class stageProducer : MonoBehaviour {
 
         if (stageNum == 5 && enemyScore == 4)
         {
-            stageNum++;
-            enemyScore = 0;
-            mScript.stageReward(33);
+            stageInit();
             //wait(5);
             Instantiate(enemy3, pos6, transform.rotation);
             Instantiate(enemy3, pos8, transform.rotation);
@@ -140,9 +149,7 @@ public class stageProducer : MonoBehaviour {
 
         if (stageNum == 6 && enemyScore == 5)
         {
-            stageNum++;
-            enemyScore = 0;
-            mScript.stageReward(33);
+            stageInit();
             //wait(5);
             Instantiate(enemy4, posMid, transform.rotation);
         }
@@ -157,6 +164,14 @@ public class stageProducer : MonoBehaviour {
 
     public void killEnemy() {
         enemyScore++;
+    }
+
+    void stageInit() {
+        //prepareStage = true;
+        stageNum++;
+        enemyScore = 0;
+        stageNumText.text = "Stage " + stageNum;
+        mScript.stageReward(33);
     }
 
 }

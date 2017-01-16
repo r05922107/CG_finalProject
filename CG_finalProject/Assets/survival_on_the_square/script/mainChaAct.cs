@@ -137,6 +137,13 @@ public class mainChaAct : MonoBehaviour {
             HP = 100;
         }
 
+        string damageText = ((int)(restore)).ToString();
+        GameObject TestSystem = GameObject.Find("TextSystem");
+        if (TestSystem != null)
+        {
+            TestSystem.GetComponent<FloatingTextController>().createHealthText(damageText, transform);
+        }
+
         // update HpBar
         if (transform.FindChild("HealthBar") != null && transform.FindChild("HealthBar").FindChild("HpBar") != null)
         {
