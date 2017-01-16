@@ -10,6 +10,7 @@ public class FloatingTextController : MonoBehaviour {
 
 
 	public void createDamageText(string text, Transform location){
+		
 		// text position
 		Vector3 position = location.position;
 		position.y += 3;
@@ -42,4 +43,5 @@ public class FloatingTextController : MonoBehaviour {
 		script.setText (text);
 		Destroy (instance, script.animator.GetCurrentAnimatorClipInfo (0)[0].clip.length);
 	}
+		
 }
