@@ -78,8 +78,8 @@ public class AIScript : MonoBehaviour {
         attackTime = thisTypeAttackTime;
         anim = GetComponent<Animator>();
 		rbody = GetComponent<Rigidbody>();
+        LandBox = GameObject.Find("LandBox");
 
-        
 
     }
 	
@@ -99,7 +99,7 @@ public class AIScript : MonoBehaviour {
 				Camera.main.transform.rotation * Vector3.down);
 		}
 
-        LandBox = GameObject.Find("LandBox");
+        
     }
 		
 	// motion 
@@ -123,7 +123,7 @@ public class AIScript : MonoBehaviour {
 					// CD-ing
 					// idle
 				}
-			}else if (targetDirection.magnitude < trackDistance &&  (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack1")) && gameObject.transform.position.y > -10f) { // move to player
+			}else if (targetDirection.magnitude < trackDistance &&  (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack1")) && gameObject.transform.position.y > -6f) { // move to player
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDirection), Time.deltaTime * 5);
                 gameObject.transform.Translate (0, 0, speed * Time.smoothDeltaTime);
 			}
@@ -138,7 +138,7 @@ public class AIScript : MonoBehaviour {
 
     private void fallDetect()
     {
-        if (transform.position.y < -20f)
+        if (transform.position.y < LandBox.transform.position.y)
         {
             dead();
         }

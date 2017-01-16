@@ -29,15 +29,17 @@ public class mainChaAct : MonoBehaviour {
 
     GameObject[] targetTransform;
 
-    
+    private GameObject LandBox;
+    private GameObject superAttackTextObject;
+
 
     // Use this for initialization
     void Start () {
         anim = GetComponent<Animator>();
 		rbody = GetComponent<Rigidbody>();
         superAttackCD = 0;
-
-
+        LandBox = GameObject.Find("LandBox");
+        superAttackTextObject = LandBox.transform.FindChild("Main Camera").FindChild("stageCanvas").FindChild("superAttack").gameObject;
     }
 	
 	// Update is called once per frame
@@ -57,10 +59,15 @@ public class mainChaAct : MonoBehaviour {
             //print("hit!");
             superAttack();
             superAttackCD = mcSuperAttackCD;
+            superAttackTextObject.SetActive(false);
         }
 
         if (superAttackCD > 0) {
             superAttackCD--;
+        }
+
+        if (!superAttackTextObject.activeSelf && superAttackCD == 0) {
+            superAttackTextObject.SetActive(true);
         }
         
 
@@ -185,12 +192,15 @@ public class mainChaAct : MonoBehaviour {
         // check dead
         if (HP <= 0)
         { // if dead destroyed itself
-			Destroy(myObject);
+            LandBox.GetComponent<stageProducer>().GameOver();
+
+            Destroy(myObject);
         }
     }
 
     private void fallDetect() {
-        if (transform.position.y < -20f) {
+        if (transform.position.y < LandBox.transform.position.y) {
+            LandBox.GetComponent<stageProducer>().GameOver();
             Destroy(myObject);
         }
     }
